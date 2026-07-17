@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- El tema dark ya está definido en values/themes.xml, se hereda aquí sin modificación -->
+<resources>
+    <!-- El tema Dark ya es la base, el modo noche hereda sin cambios -->
     <style name="Theme.AgendaPx" parent="Base.Theme.AgendaPx" />
 </resources>

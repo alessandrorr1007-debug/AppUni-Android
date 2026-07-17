@@ -11,7 +11,7 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <!-- Bottom Navigation Bar -->
+    <!-- Bottom Navigation Bar: 3 tabs -->
     <LinearLayout
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
@@ -70,18 +70,18 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/navAsistencia"
+            android:id="@+id/btnCerrarSesion"
             style="@style/NavItem">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="✅"
+                android:text="🚪"
                 android:textSize="22sp" />
 
             <TextView
                 style="@style/NavText"
-                android:text="Asistencia" />
+                android:text="Salir" />
         </LinearLayout>
 
     </LinearLayout>
