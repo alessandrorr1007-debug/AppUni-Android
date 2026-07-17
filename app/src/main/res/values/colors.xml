@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Paleta base (oscura como la web) -->
+    <color name="bg_dark">#0A0A19</color>
+    <color name="bg_dark_card">#12122A</color>
+    <color name="bg_surface">#1A1A35</color>
+
+    <!-- Acentos violeta/índigo (idénticos a la web) -->
+    <color name="accent_purple">#7C3AED</color>
+    <color name="accent_purple_light">#C4B5FD</color>
+    <color name="accent_indigo">#4F46E5</color>
+    <color name="accent_blue">#38BDF8</color>
+    <color name="accent_blue_light">#7DD3FC</color>
+
+    <!-- Estado: aprobado, riesgo, pendiente -->
+    <color name="ok_green">#22C55E</color>
+    <color name="ok_green_light">#86EFAC</color>
+    <color name="warn_yellow">#F59E0B</color>
+    <color name="warn_yellow_light">#FCD34D</color>
+    <color name="danger_red">#EF4444</color>
+    <color name="danger_red_light">#FCA5A5</color>
+
+    <!-- Texto -->
+    <color name="text_primary">#F1F5F9</color>
+    <color name="text_secondary">#94A3B8</color>
+    <color name="text_muted">#475569</color>
+
+    <!-- Bordes y superficies con transparencia -->
+    <color name="border">#1E1E3F</color>
+    <color name="surface_glass">#14143010</color>
+
+    <!-- Colores heredados requeridos por el sistema -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

@@ -1,0 +1,4 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- El tema dark ya está definido en values/themes.xml, se hereda aquí sin modificación -->
+    <style name="Theme.AgendaPx" parent="Base.Theme.AgendaPx" />
+</resources>

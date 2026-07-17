@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo oscuro degradado igual que la web (#0A0A19 → #12122A → #1A1A35) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:startColor="#0A0A19"
+        android:centerColor="#0E0E24"
+        android:endColor="#12122A"
+        android:angle="270" />
+</shape>
