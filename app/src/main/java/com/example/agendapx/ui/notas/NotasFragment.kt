@@ -13,11 +13,11 @@ import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.agendapx.R
+import com.example.agendapx.data.AppConstants
 import com.example.agendapx.data.NetworkUtils
 import com.example.agendapx.data.UserPreferences
 import com.example.agendapx.databinding.FragmentNotasBinding
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -30,12 +30,14 @@ class NotasFragment : Fragment() {
     private var _binding: FragmentNotasBinding? = null
     private val binding get() = _binding!!
 
-    private val backendUrl = "https://upao-px-backend.onrender.com/notas"
-    private val PREFS_BASE = "notas_cache"
-    private val KEY_JSON = "ultima_respuesta_notas"
+    private val backendUrl = "${AppConstants.BACKEND_URL}/notas"
+    private val PREFS_BASE = AppConstants.PREFS_NOTAS_CACHE
+    private val KEY_JSON = AppConstants.KEY_NOTAS_JSON
 
     private val cursosJson = mutableListOf<JSONObject>()
     private var userId: String = ""
+    private var termCodeActual: String? = null  // null = periodo actual (backend usa el default)
+    private val periodos = mutableListOf<Pair<String, String>>() // (codigo, nombre)
 
     // ─────────────────────────────────────────────────────────────────────────
     //  Ciclo de vida
@@ -59,6 +61,7 @@ class NotasFragment : Fragment() {
             }
 
             activarEventos()
+            cargarPeriodos()
 
             val hayCache = cargarDesdeCache()
             cargarDesdeBackend(force = false, mostrarCargando = !hayCache)
@@ -72,11 +75,91 @@ class NotasFragment : Fragment() {
     private fun activarEventos() {
         binding.btnActualizarNotas.setOnClickListener {
             Toast.makeText(requireContext(), "Actualizando desde UPAO PX...", Toast.LENGTH_SHORT).show()
-            cargarDesdeBackend(force = true, mostrarCargando = true)
+            cargarDesdeBackend(force = true, mostrarCargando = true, termCode = termCodeActual)
         }
 
         binding.btnVolverCursos.setOnClickListener {
             mostrarListaCursos()
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    //  Selector de Período
+    // ─────────────────────────────────────────────────────────────────────────
+
+    private fun cargarPeriodos() {
+        thread {
+            try {
+                val url = "${AppConstants.BACKEND_URL}/notas/periodos?userId=$userId"
+                val respuesta = NetworkUtils.hacerGet(url)
+                val obj = JSONObject(respuesta)
+
+                if (obj.optBoolean("ok", false)) {
+                    val data = obj.optJSONArray("data") ?: return@thread
+                    val lista = mutableListOf<Pair<String, String>>()
+
+                    for (i in 0 until data.length()) {
+                        val p = data.getJSONObject(i)
+                        lista.add(Pair(p.optString("codigo"), p.optString("nombre")))
+                    }
+
+                    if (lista.isNotEmpty()) {
+                        periodos.clear()
+                        periodos.addAll(lista)
+
+                        requireActivity().runOnUiThread {
+                            configurarSpinnerPeriodos()
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                // Sin conexión o backend no disponible → el spinner se mantiene oculto
+            }
+        }
+    }
+
+    private fun configurarSpinnerPeriodos() {
+        if (!isAdded || _binding == null) return
+
+        val nombres = periodos.map { it.second }
+        val adapter = android.widget.ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            nombres
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+
+        binding.spinnerPeriodo.adapter = adapter
+        binding.spinnerPeriodo.visibility = View.VISIBLE
+
+        binding.spinnerPeriodo.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+            var primeraVez = true
+
+            override fun onItemSelected(
+                parent: android.widget.AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if (primeraVez) {
+                    primeraVez = false
+                    return  // Ignorar la selección inicial automática
+                }
+
+                val codigo = periodos[position].first
+                val nombre = periodos[position].second
+
+                // Si es el período actual (202610), usar null para que el backend use su default
+                termCodeActual = if (position == 0) null else codigo
+
+                Toast.makeText(requireContext(), "Cargando $nombre...", Toast.LENGTH_SHORT).show()
+                cursosJson.clear()
+                binding.contenedorCursos.removeAllViews()
+                cargarDesdeBackend(force = true, mostrarCargando = true, termCode = termCodeActual)
+            }
+
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
         }
     }
 
@@ -123,7 +206,11 @@ class NotasFragment : Fragment() {
     //  Red
     // ─────────────────────────────────────────────────────────────────────────
 
-    private fun cargarDesdeBackend(force: Boolean, mostrarCargando: Boolean) {
+    private fun cargarDesdeBackend(
+        force: Boolean,
+        mostrarCargando: Boolean,
+        termCode: String? = null
+    ) {
         if (mostrarCargando) {
             binding.progressBarNotas.visibility = View.VISIBLE
             binding.txtEstadoGeneralNotas.text = "Sincronizando con UPAO PX..."
@@ -131,9 +218,12 @@ class NotasFragment : Fragment() {
 
         thread {
             try {
-                val separator = if (force) "&" else "?"
-                val url = "$backendUrl${separator}userId=$userId${if (force) "&force=true" else ""}"
-                val respuesta = hacerGet(url)
+                // Construir URL con userId y termCode opcional
+                val urlBase = "${AppConstants.BACKEND_URL}/notas?userId=$userId"
+                val urlConTermCode = if (termCode != null) "$urlBase&termCode=$termCode" else urlBase
+                val url = if (force) "$urlConTermCode&force=true" else urlConTermCode
+
+                val respuesta = NetworkUtils.hacerGet(url)
                 val obj = JSONObject(respuesta)
                 val data = obj.optJSONArray("data") ?: JSONArray()
 
@@ -146,15 +236,17 @@ class NotasFragment : Fragment() {
                 val cacheAnterior = leerCache()
                 val cambios = NotasNotificacionHelper.detectarCambios(cacheAnterior, respuesta)
 
-                // Guardar nuevo caché
-                guardarEnCache(respuesta)
+                // Guardar nuevo caché (solo para el período actual)
+                if (termCode == null) {
+                    guardarEnCache(respuesta)
+                }
 
                 requireActivity().runOnUiThread {
                     binding.progressBarNotas.visibility = View.GONE
                     procesarYRenderizar(respuesta, desdeCache = false, jsonAnterior = cacheAnterior)
 
-                    // Notificar cambios detectados
-                    if (cambios.isNotEmpty()) {
+                    // Notificar cambios detectados (solo en período actual)
+                    if (termCode == null && cambios.isNotEmpty()) {
                         NotasNotificacionHelper.notificarCambios(requireContext(), cambios)
                     }
                 }
@@ -174,8 +266,6 @@ class NotasFragment : Fragment() {
             }
         }
     }
-
-    private fun hacerGet(urlTexto: String): String = NetworkUtils.hacerGet(urlTexto)
 
     private fun fallback() {
         if (cursosJson.isNotEmpty()) {

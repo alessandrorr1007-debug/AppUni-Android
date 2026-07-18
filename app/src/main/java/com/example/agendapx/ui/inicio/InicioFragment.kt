@@ -11,13 +11,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.agendapx.R
+import com.example.agendapx.data.AppConstants
 import com.example.agendapx.data.HorarioData
 import com.example.agendapx.databinding.FragmentInicioBinding
 import com.example.agendapx.ui.horario.HorarioFragment
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
 
 class InicioFragment : Fragment() {
 
@@ -48,10 +45,10 @@ class InicioFragment : Fragment() {
     }
 
     private fun cargarResumen() {
-        val diaActual = obtenerDiaActual()
+        val diaActual = AppConstants.obtenerDiaActual()
         val clasesHoy = HorarioData.obtenerCursosPorDia(diaActual)
 
-        binding.txtSemana.text = "Semana ${calcularSemanaAcademica()}"
+        binding.txtSemana.text = "Semana ${AppConstants.calcularSemanaAcademica()}"
 
         binding.txtClasesHoy.text = if (clasesHoy.isEmpty()) {
             "Clases de hoy\nNo tienes clases programadas"
@@ -173,36 +170,6 @@ class InicioFragment : Fragment() {
     private fun obtenerNota(valor: String): Double {
         val nota = valor.toDoubleOrNull() ?: 0.0
         return nota.coerceIn(0.0, 20.0)
-    }
-
-    private fun calcularSemanaAcademica(): Int {
-        val inicioSemana9 = Calendar.getInstance().apply {
-            set(2026, Calendar.JUNE, 1)
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-        }
-
-        val hoy = Calendar.getInstance()
-        val diferenciaMillis = hoy.timeInMillis - inicioSemana9.timeInMillis
-        val semanasPasadas = (diferenciaMillis / (1000 * 60 * 60 * 24 * 7)).toInt()
-
-        return 9 + semanasPasadas
-    }
-
-    private fun obtenerDiaActual(): String {
-        val formato = SimpleDateFormat("EEEE", Locale.forLanguageTag("es-ES"))
-        val dia = formato.format(Date()).replaceFirstChar { it.uppercase() }
-
-        return when (dia) {
-            "Lunes" -> "Lunes"
-            "Martes" -> "Martes"
-            "Miércoles" -> "Miércoles"
-            "Jueves" -> "Jueves"
-            "Viernes" -> "Viernes"
-            "Sábado" -> "Sábado"
-            else -> "Lunes"
-        }
     }
 
     override fun onDestroyView() {

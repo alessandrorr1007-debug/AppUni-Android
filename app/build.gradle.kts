@@ -62,4 +62,10 @@ dependencies {
 
     // WorkManager for background sync
     implementation("androidx.work:work-runtime-ktx:2.9.0")
+
+    // CardView para tarjetas de cursos/notas
+    implementation("androidx.cardview:cardview:1.0.0")
+
+    // Lifecycle coroutines (lifecycleScope en Activities)
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
 }

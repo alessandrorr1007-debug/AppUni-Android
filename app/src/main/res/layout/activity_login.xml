@@ -1,174 +1,246 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_app_gradient"
-    android:fillViewport="true">
+    android:background="@drawable/bg_app_gradient">
 
-    <LinearLayout
+    <!-- =========================================
+         SECCIÓN: Formulario de Login
+         ========================================= -->
+    <ScrollView
+        android:id="@+id/seccionFormulario"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:visibility="visible">
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="80dp" />
-
-        <!-- Logo / Icono -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="🎓"
-            android:textSize="72sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="UPAO PX"
-            android:textColor="@color/text_primary"
-            android:textSize="32sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:text="Consulta tu información académica"
-            android:textColor="@color/text_secondary"
-            android:textSize="15sp" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="48dp" />
-
-        <!-- Formulario -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilUserId"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="ID del Alumno"
-            app:boxBackgroundColor="@color/bg_dark_card"
-            app:boxCornerRadiusBottomEnd="16dp"
-            app:boxCornerRadiusBottomStart="16dp"
-            app:boxCornerRadiusTopEnd="16dp"
-            app:boxCornerRadiusTopStart="16dp"
-            app:boxStrokeColor="@color/accent_indigo"
-            app:hintTextColor="@color/accent_purple_light"
-            app:hintEnabled="true">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtUserId"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:inputType="text"
-                android:textColor="@color/text_primary"
-                android:textColorHint="@color/text_muted"
-                android:textSize="16sp" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="16dp" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilPassword"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Contraseña"
-            app:boxBackgroundColor="@color/bg_dark_card"
-            app:boxCornerRadiusBottomEnd="16dp"
-            app:boxCornerRadiusBottomStart="16dp"
-            app:boxCornerRadiusTopEnd="16dp"
-            app:boxCornerRadiusTopStart="16dp"
-            app:boxStrokeColor="@color/accent_indigo"
-            app:endIconMode="password_toggle"
-            app:hintTextColor="@color/accent_purple_light"
-            app:hintEnabled="true">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtPassword"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:inputType="textPassword"
-                android:textColor="@color/text_primary"
-                android:textColorHint="@color/text_muted"
-                android:textSize="16sp" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="8dp" />
-
-        <!-- Recordar sesión -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingVertical="8dp">
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="24dp">
 
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/swRecordarSesion"
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="64dp" />
+
+            <!-- Logo / Icono -->
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="Recordar sesión"
+                android:text="🎓"
+                android:textSize="72sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="UPAO PX"
+                android:textColor="@color/text_primary"
+                android:textSize="34sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Consulta tu información académica"
                 android:textColor="@color/text_secondary"
-                app:thumbTint="@color/accent_purple"
-                app:trackTint="@color/bg_surface" />
+                android:textSize="15sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="48dp" />
+
+            <!-- Campo: ID del Alumno -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilUserId"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="ID del Alumno"
+                app:boxBackgroundColor="@color/bg_dark_card"
+                app:boxCornerRadiusBottomEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusTopStart="16dp"
+                app:boxStrokeColor="@color/accent_indigo"
+                app:hintTextColor="@color/accent_purple_light"
+                app:hintEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtUserId"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:inputType="text"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_muted"
+                    android:textSize="16sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <!-- Campo: Contraseña -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilPassword"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Contraseña"
+                app:boxBackgroundColor="@color/bg_dark_card"
+                app:boxCornerRadiusBottomEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusTopStart="16dp"
+                app:boxStrokeColor="@color/accent_indigo"
+                app:endIconMode="password_toggle"
+                app:hintTextColor="@color/accent_purple_light"
+                app:hintEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:inputType="textPassword"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_muted"
+                    android:textSize="16sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="8dp" />
+
+            <!-- Recordar sesión -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingVertical="8dp">
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/swRecordarSesion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Recordar sesión"
+                    android:textColor="@color/text_secondary"
+                    app:thumbTint="@color/accent_purple"
+                    app:trackTint="@color/bg_surface" />
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp" />
+
+            <!-- Botón Login -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:backgroundTint="@color/accent_purple"
+                android:stateListAnimator="@null"
+                android:text="Iniciar Sesión"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:cornerRadius="16dp" />
+
+            <!-- Mensaje de error -->
+            <TextView
+                android:id="@+id/txtError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/danger_red_light"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="24dp" />
+
+            <!-- Nota informativa -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Tus credenciales se usan únicamente para acceder al portal UPAO y nunca se almacenan."
+                android:textColor="@color/text_muted"
+                android:textSize="12sp" />
 
         </LinearLayout>
+    </ScrollView>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="12dp" />
+    <!-- =========================================
+         SECCIÓN: Pantalla de Carga
+         (se muestra durante el login, puede tardar 30-60 segundos)
+         ========================================= -->
+    <LinearLayout
+        android:id="@+id/seccionCargando"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="40dp"
+        android:visibility="gone">
 
-        <!-- Botón Login -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:backgroundTint="@color/accent_purple"
-            android:stateListAnimator="@null"
-            android:text="Iniciar Sesión"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:cornerRadius="16dp" />
-
-        <!-- Mensaje de error -->
+        <!-- Logo animado -->
         <TextView
-            android:id="@+id/txtError"
+            android:id="@+id/txtLogoEmoji"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🎓"
+            android:textSize="80sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="UPAO PX"
+            android:textColor="@color/text_primary"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <!-- Barra de progreso indeterminada -->
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="200dp"
+            android:layout_height="4dp"
+            android:layout_marginTop="32dp"
+            android:indeterminate="true"
+            android:progressTint="@color/accent_purple" />
+
+        <!-- Mensaje de estado (rota entre varios) -->
+        <TextView
+            android:id="@+id/txtMensajeCarga"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text=""
-            android:textColor="@color/danger_red_light"
-            android:textSize="14sp"
-            android:visibility="gone" />
+            android:text="Verificando credenciales..."
+            android:textColor="@color/text_secondary"
+            android:textSize="16sp" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="24dp" />
-
-        <!-- Información -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:gravity="center"
-            android:text="Si es tu primer ingreso, se creará tu cuenta automáticamente."
+            android:text="Esto puede tardar hasta 60 segundos.\nPor favor no cierres la aplicación."
             android:textColor="@color/text_muted"
-            android:textSize="12sp" />
+            android:textSize="13sp" />
 
     </LinearLayout>
 
-</ScrollView>
+</FrameLayout>

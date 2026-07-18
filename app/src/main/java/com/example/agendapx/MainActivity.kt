@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.work.*
+import com.example.agendapx.data.AppConstants
 import com.example.agendapx.data.NetworkUtils
 import com.example.agendapx.data.UserPreferences
 import com.example.agendapx.databinding.ActivityMainBinding
@@ -21,7 +22,6 @@ import com.example.agendapx.ui.login.LoginActivity
 import com.example.agendapx.ui.notas.NotasFragment
 import com.example.agendapx.ui.notas.NotasSyncWorker
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -146,7 +146,7 @@ class MainActivity : AppCompatActivity() {
                 try {
                     val body = JSONObject().put("userId", currentUserId)
                     NetworkUtils.hacerPost(
-                        "https://upao-px-backend.onrender.com/auth/logout",
+                        "${AppConstants.BACKEND_URL}/auth/logout",
                         body
                     )
                 } catch (e: Exception) {
