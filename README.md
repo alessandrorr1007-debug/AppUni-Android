@@ -97,20 +97,7 @@ Aplicación Android para estudiantes de la **Universidad Privada Antenor Orrego 
    ./gradlew installDebug
    ```
 
-### Backend
 
-La app requiere el backend activo para funcionar. El repositorio del backend está en:
-
-[Upao_PX Backend](https://github.com/alessandrorr1007-debug/Upao_.git)
-
-Para ejecutar el backend localmente:
-
-```bash
-git clone https://github.com/alessandrorr1007-debug/Upao_.git
-cd "UPAO PX/backend"
-npm install
-npm run dev
-```
 
 ### iOS
 
