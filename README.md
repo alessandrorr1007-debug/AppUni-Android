@@ -127,20 +127,4 @@ El repositorio de la versión nativa para iOS está en:
 | 1.1.0 | Julio 2026 | Sistema de actualizaciones in-app, fix de errores de compilación, migración a coroutines |
 | 1.0.0 | Junio 2026 | Versión inicial: login, notas, horario, calculadora, temas claro/oscuro |
 
----
 
-## 📄 Licencia
-
-Este proyecto es de uso académico.
-
-```
-[COMPLETAR INFORMACIÓN DE LICENCIA]
-```
-
----
-
-## 👤 Autor
-
-**Alessandro Rodriguez**
-
-- GitHub: [@alessandrorr1007-debug](https://github.com/alessandrorr1007-debug)
