@@ -23,7 +23,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
-import kotlin.concurrent.thread
 import kotlin.math.roundToInt
 
 class NotasFragment : Fragment() {
@@ -92,32 +91,34 @@ class NotasFragment : Fragment() {
     // ─────────────────────────────────────────────────────────────────────────
 
     private fun cargarPeriodos() {
-        thread {
-            try {
-                val url = "${AppConstants.BACKEND_URL}/notas/periodos?userId=$userId"
-                val respuesta = NetworkUtils.hacerGet(url)
-                val obj = JSONObject(respuesta)
+        lifecycleScope.launch {
+            val resultado = withContext(Dispatchers.IO) {
+                try {
+                    val token = UserPreferences.getToken()
+                    val url = "${AppConstants.BACKEND_URL}/notas/periodos"
+                    val respuesta = NetworkUtils.hacerGet(url, token)
+                    val obj = JSONObject(respuesta)
 
-                if (obj.optBoolean("ok", false)) {
-                    val data = obj.optJSONArray("data") ?: return@thread
-                    val lista = mutableListOf<Pair<String, String>>()
+                    if (obj.optBoolean("ok", false)) {
+                        val data = obj.optJSONArray("data") ?: return@withContext null
+                        val lista = mutableListOf<Pair<String, String>>()
 
-                    for (i in 0 until data.length()) {
-                        val p = data.getJSONObject(i)
-                        lista.add(Pair(p.optString("codigo"), p.optString("nombre")))
-                    }
-
-                    if (lista.isNotEmpty()) {
-                        periodos.clear()
-                        periodos.addAll(lista)
-
-                        requireActivity().runOnUiThread {
-                            configurarSpinnerPeriodos()
+                        for (i in 0 until data.length()) {
+                            val p = data.getJSONObject(i)
+                            lista.add(Pair(p.optString("codigo"), p.optString("nombre")))
                         }
-                    }
+
+                        lista.ifEmpty { null }
+                    } else null
+                } catch (e: Exception) {
+                    null
                 }
-            } catch (e: Exception) {
-                // Sin conexión o backend no disponible → el spinner se mantiene oculto
+            }
+
+            if (resultado != null && isAdded) {
+                periodos.clear()
+                periodos.addAll(resultado)
+                configurarSpinnerPeriodos()
             }
         }
     }
@@ -220,43 +221,53 @@ class NotasFragment : Fragment() {
             binding.txtEstadoGeneralNotas.text = "Sincronizando con UPAO PX..."
         }
 
-        thread {
-            try {
-                // Construir URL con userId y termCode opcional
-                val urlBase = "${AppConstants.BACKEND_URL}/notas?userId=$userId"
-                val urlConTermCode = if (termCode != null) "$urlBase&termCode=$termCode" else urlBase
-                val url = if (force) "$urlConTermCode&force=true" else urlConTermCode
+        lifecycleScope.launch {
+            val resultado = withContext(Dispatchers.IO) {
+                try {
+                    val token = UserPreferences.getToken()
+                    val urlBase = "${AppConstants.BACKEND_URL}/notas"
+                    val params = mutableListOf<String>()
+                    if (termCode != null) params.add("termCode=$termCode")
+                    if (force) params.add("force=true")
+                    val url = if (params.isNotEmpty()) "$urlBase?${params.joinToString("&")}" else urlBase
 
-                val respuesta = NetworkUtils.hacerGet(url)
-                val obj = JSONObject(respuesta)
-                val data = obj.optJSONArray("data") ?: JSONArray()
+                    val respuesta = NetworkUtils.hacerGet(url, token)
+                    val obj = JSONObject(respuesta)
+                    val data = obj.optJSONArray("data") ?: JSONArray()
 
-                if (!obj.optBoolean("ok", false) || data.length() == 0) {
-                    requireActivity().runOnUiThread { fallback() }
-                    return@thread
+                    if (!obj.optBoolean("ok", false) || data.length() == 0) {
+                        BackendResult.Empty
+                    } else {
+                        val cacheAnterior = leerCache()
+                        val cambios = NotasNotificacionHelper.detectarCambios(cacheAnterior, respuesta)
+
+                        if (termCode == null) {
+                            guardarEnCache(respuesta)
+                        }
+
+                        BackendResult.Success(respuesta, cacheAnterior, cambios)
+                    }
+                } catch (e: Exception) {
+                    BackendResult.Error
                 }
+            }
 
-                // Detectar cambios antes de sobrescribir el caché
-                val cacheAnterior = leerCache()
-                val cambios = NotasNotificacionHelper.detectarCambios(cacheAnterior, respuesta)
+            if (!isAdded) return@launch
 
-                // Guardar nuevo caché (solo para el período actual)
-                if (termCode == null) {
-                    guardarEnCache(respuesta)
-                }
-
-                requireActivity().runOnUiThread {
+            when (resultado) {
+                is BackendResult.Success -> {
                     binding.progressBarNotas.visibility = View.GONE
-                    procesarYRenderizar(respuesta, desdeCache = false, jsonAnterior = cacheAnterior)
+                    procesarYRenderizar(resultado.respuesta, desdeCache = false, jsonAnterior = resultado.cacheAnterior)
 
-                    // Notificar cambios detectados (solo en período actual)
-                    if (termCode == null && cambios.isNotEmpty()) {
-                        NotasNotificacionHelper.notificarCambios(requireContext(), cambios)
+                    if (termCode == null && resultado.cambios.isNotEmpty()) {
+                        NotasNotificacionHelper.notificarCambios(requireContext(), resultado.cambios)
                     }
                 }
-
-            } catch (e: Exception) {
-                requireActivity().runOnUiThread {
+                is BackendResult.Empty -> {
+                    binding.progressBarNotas.visibility = View.GONE
+                    fallback()
+                }
+                is BackendResult.Error -> {
                     binding.progressBarNotas.visibility = View.GONE
                     fallback()
                     if (cursosJson.isEmpty()) {
@@ -269,6 +280,12 @@ class NotasFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private sealed class BackendResult {
+        data class Success(val respuesta: String, val cacheAnterior: String?, val cambios: List<String>) : BackendResult()
+        data object Empty : BackendResult()
+        data object Error : BackendResult()
     }
 
     private fun fallback() {

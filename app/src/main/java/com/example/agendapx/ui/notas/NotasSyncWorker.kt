@@ -5,6 +5,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.agendapx.data.AppConstants
 import com.example.agendapx.data.NetworkUtils
+import com.example.agendapx.data.UserPreferences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -18,11 +19,14 @@ class NotasSyncWorker(
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         try {
             val userId = inputData.getString("user_id") ?: return@withContext Result.failure()
+            val token = UserPreferences.getToken()
+            if (token.isEmpty()) return@withContext Result.failure()
+
             val prefsName = "${AppConstants.PREFS_NOTAS_CACHE}_${userId}"
             val prefs = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
             val cacheActual = prefs.getString(AppConstants.KEY_NOTAS_JSON, null)
 
-            val respuesta = NetworkUtils.hacerGet("${AppConstants.BACKEND_URL}/notas?userId=$userId")
+            val respuesta = NetworkUtils.hacerGet("${AppConstants.BACKEND_URL}/notas", token)
             val obj = JSONObject(respuesta)
 
             if (!obj.optBoolean("ok", false)) return@withContext Result.retry()

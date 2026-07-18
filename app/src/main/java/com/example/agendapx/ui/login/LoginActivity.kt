@@ -16,7 +16,6 @@ import com.example.agendapx.data.UserPreferences
 import com.example.agendapx.databinding.ActivityLoginBinding
 import com.example.agendapx.data.update.UpdateChecker
 import com.example.agendapx.data.update.UpdateDialogActivity
-import com.example.agendapx.data.update.UpdateInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -28,7 +27,6 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val backendBase = AppConstants.BACKEND_URL
 
-    // Mensajes de carga que rotan durante la autenticación
     private val mensajesCarga = listOf(
         "Verificando credenciales...",
         "Conectando con UPAO...",
@@ -40,22 +38,23 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         UserPreferences.init(this)
 
-        val themeMode = kotlinx.coroutines.runBlocking {
-            withContext(Dispatchers.IO) { UserPreferences.getThemeMode() }
+        lifecycleScope.launch {
+            val themeMode = withContext(Dispatchers.IO) { UserPreferences.getThemeMode() }
+            ThemeManager.setTheme(themeMode)
+
+            withContext(Dispatchers.Main) {
+                super@LoginActivity.onCreate(savedInstanceState)
+
+                binding = ActivityLoginBinding.inflate(layoutInflater)
+                setContentView(binding.root)
+
+                mostrarEstado("formulario")
+
+                checkExistingSession()
+                checkForUpdates()
+                setupListeners()
+            }
         }
-        ThemeManager.setTheme(themeMode)
-
-        super.onCreate(savedInstanceState)
-
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        // Iniciar en estado de formulario
-        mostrarEstado("formulario")
-
-        checkExistingSession()
-        checkForUpdates()
-        setupListeners()
     }
 
     // ─────────────────────────────────────────────────────────────────
@@ -68,19 +67,18 @@ class LoginActivity : AppCompatActivity() {
             val rememberSession = UserPreferences.isRememberSessionEnabled()
 
             if (isLoggedIn && rememberSession) {
-                // Verificar con el backend que la sesión siga siendo válida
                 val userId = UserPreferences.getCurrentUserId()
-                if (userId.isNotEmpty()) {
+                val token = UserPreferences.getToken()
+                if (userId.isNotEmpty() && token.isNotEmpty()) {
                     mostrarEstado("cargando", "Verificando sesión guardada...")
 
                     val sesionValida = withContext(Dispatchers.IO) {
-                        verificarSesionBackend(userId)
+                        verificarSesionBackend(token)
                     }
 
                     if (sesionValida) {
                         navigateToMain()
                     } else {
-                        // Sesión expirada — limpiar y mostrar formulario
                         withContext(Dispatchers.IO) { UserPreferences.clearSession() }
                         mostrarEstado("formulario")
                         mostrarError("Tu sesión expiró. Por favor vuelve a ingresar.")
@@ -92,13 +90,12 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun verificarSesionBackend(userId: String): Boolean {
+    private fun verificarSesionBackend(token: String): Boolean {
         return try {
-            val response = NetworkUtils.hacerGet("$backendBase/auth/status?userId=$userId")
+            val response = NetworkUtils.hacerGet("$backendBase/auth/status", token)
             val json = JSONObject(response)
             json.optBoolean("authenticated", false)
         } catch (e: Exception) {
-            // Sin conexión → asumir sesión válida (se verificará al cargar notas)
             true
         }
     }
@@ -161,7 +158,8 @@ class LoginActivity : AppCompatActivity() {
                     val json = JSONObject(response)
 
                     if (json.optBoolean("ok", false)) {
-                        LoginResult.Success
+                        val token = json.optString("token", "")
+                        LoginResult.Success(token)
                     } else {
                         val msg = json.optString("message", "Error al iniciar sesión")
                         LoginResult.Error(msg)
@@ -173,7 +171,7 @@ class LoginActivity : AppCompatActivity() {
 
             when (result) {
                 is LoginResult.Success -> {
-                    UserPreferences.saveSession(userId, userId, remember)
+                    UserPreferences.saveSession(userId, userId, remember, result.token)
                     navigateToMain()
                 }
                 is LoginResult.Error -> {
@@ -263,7 +261,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private sealed class LoginResult {
-        data object Success : LoginResult()
+        data class Success(val token: String) : LoginResult()
         data class Error(val message: String) : LoginResult()
     }
 }

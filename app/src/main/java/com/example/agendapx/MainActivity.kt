@@ -37,31 +37,31 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         UserPreferences.init(this)
 
-        val themeMode = kotlinx.coroutines.runBlocking {
-            withContext(Dispatchers.IO) { UserPreferences.getThemeMode() }
-        }
-        ThemeManager.setTheme(themeMode)
-
-        super.onCreate(savedInstanceState)
-
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         lifecycleScope.launch {
-            currentUserId = withContext(Dispatchers.IO) {
-                UserPreferences.getCurrentUserId()
-            }
+            val themeMode = withContext(Dispatchers.IO) { UserPreferences.getThemeMode() }
+            ThemeManager.setTheme(themeMode)
 
-            if (currentUserId.isEmpty()) {
-                navigateToLogin()
-                return@launch
-            }
+            withContext(Dispatchers.Main) {
+                super@MainActivity.onCreate(savedInstanceState)
 
-            solicitarPermisoNotificaciones()
-            programarSincronizacionPeriodica()
-            cambiarFragment(InicioFragment())
-            seleccionarTab(0)
-            setupNavigation()
+                binding = ActivityMainBinding.inflate(layoutInflater)
+                setContentView(binding.root)
+
+                currentUserId = withContext(Dispatchers.IO) {
+                    UserPreferences.getCurrentUserId()
+                }
+
+                if (currentUserId.isEmpty()) {
+                    navigateToLogin()
+                    return@withContext
+                }
+
+                solicitarPermisoNotificaciones()
+                programarSincronizacionPeriodica()
+                cambiarFragment(InicioFragment())
+                seleccionarTab(0)
+                setupNavigation()
+            }
         }
     }
 
@@ -151,10 +151,10 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 try {
-                    val body = JSONObject().put("userId", currentUserId)
-                    NetworkUtils.hacerPost(
+                    val token = UserPreferences.getToken()
+                    NetworkUtils.hacerPostAuth(
                         "${AppConstants.BACKEND_URL}/auth/logout",
-                        body
+                        org.json.JSONObject()
                     )
                 } catch (e: Exception) {
                     Log.w("MainActivity", "Error al cerrar sesión en backend: ${e.message}")

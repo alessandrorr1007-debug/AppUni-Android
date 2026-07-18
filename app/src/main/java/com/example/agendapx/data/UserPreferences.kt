@@ -1,6 +1,7 @@
 package com.example.agendapx.data
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -20,19 +21,25 @@ object UserPreferences {
     private val KEY_IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
     private val KEY_REMEMBER_SESSION = booleanPreferencesKey("remember_session")
     private val KEY_THEME_MODE = stringPreferencesKey("theme_mode")
+    private val KEY_JWT_TOKEN = stringPreferencesKey("jwt_token")
 
     private lateinit var context: Context
+
+    private fun getPrefs(): SharedPreferences {
+        return context.getSharedPreferences("session_prefs", Context.MODE_PRIVATE)
+    }
 
     fun init(context: Context) {
         this.context = context.applicationContext
     }
 
-    suspend fun saveSession(userId: String, userName: String, remember: Boolean) {
+    suspend fun saveSession(userId: String, userName: String, remember: Boolean, token: String = "") {
         context.dataStore.edit { prefs ->
             prefs[KEY_USER_ID] = userId
             prefs[KEY_USER_NAME] = userName
             prefs[KEY_IS_LOGGED_IN] = true
             prefs[KEY_REMEMBER_SESSION] = remember
+            prefs[KEY_JWT_TOKEN] = token
         }
     }
 
@@ -42,6 +49,7 @@ object UserPreferences {
             prefs[KEY_USER_NAME] = ""
             prefs[KEY_IS_LOGGED_IN] = false
             prefs[KEY_REMEMBER_SESSION] = false
+            prefs[KEY_JWT_TOKEN] = ""
         }
     }
 
@@ -61,6 +69,26 @@ object UserPreferences {
         return context.dataStore.data.map { prefs ->
             prefs[KEY_IS_LOGGED_IN] ?: false
         }.first()
+    }
+
+    suspend fun getToken(): String {
+        return context.dataStore.data.map { prefs ->
+            prefs[KEY_JWT_TOKEN] ?: ""
+        }.first()
+    }
+
+    fun getTokenSync(): String {
+        return try {
+            getPrefs().getString("jwt_token", "") ?: ""
+        } catch (e: Exception) {
+            ""
+        }
+    }
+
+    suspend fun saveToken(token: String) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_JWT_TOKEN] = token
+        }
     }
 
     suspend fun saveThemeMode(mode: String) {
