@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,9 +30,10 @@ jobs:
         run: |
           TAG="${GITHUB_REF#refs/tags/v}"
           echo "VERSION=$TAG" >> $GITHUB_OUTPUT
-          # Extract versionCode from version (e.g., 1.2.3 -> 10203)
+
           IFS='.' read -r MAJOR MINOR PATCH <<< "$TAG"
           VERSION_CODE=$((MAJOR * 10000 + MINOR * 100 + PATCH))
+
           echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_OUTPUT
 
       - name: Set version in build.gradle.kts
@@ -40,19 +44,36 @@ jobs:
       - name: Build Release APK
         run: ./gradlew assembleRelease
 
-      - name: Sign APK (debug key for distribution)
+      - name: Sign APK
         run: |
-          # Generate a debug keystore for signing
-          keytool -genkeypair -v -keystore release-key.jks -alias agendapx -keyalg RSA -keysize 2048 -validity 10000 -storepass agendapx123 -dname "CN=AgendaPx, OU=Dev, O=AgendaPx, L=Lima, ST=Lima, C=PE"
-          # Align the APK
-          zipalign -v 4 app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/app-release-aligned.apk || true
-          # Sign with apksigner
-          apksigner sign --ks release-key.jks --ks-key-alias agendapx --ks-pass pass:agendapx123 --out app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/app-release-unsigned.apk || true
+          keytool -genkeypair -v \
+            -keystore release-key.jks \
+            -alias appuni \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass appuni123 \
+            -dname "CN=AppUni, OU=Dev, O=AppUni, L=Lima, ST=Lima, C=PE"
 
-      - name: Fallback: Use debug APK if release signing fails
-        if: failure()
+          BUILD_TOOLS=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
+
+          $BUILD_TOOLS/zipalign -v 4 \
+            app/build/outputs/apk/release/app-release-unsigned.apk \
+            app/build/outputs/apk/release/app-release-aligned.apk
+
+          $BUILD_TOOLS/apksigner sign \
+            --ks release-key.jks \
+            --ks-key-alias appuni \
+            --ks-pass pass:appuni123 \
+            --out app/build/outputs/apk/release/app-release.apk \
+            app/build/outputs/apk/release/app-release-aligned.apk
+
+          rm -f app/build/outputs/apk/release/app-release-unsigned.apk
+          rm -f app/build/outputs/apk/release/app-release-aligned.apk
+
+      - name: Verify signed APK exists
         run: |
-          cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/release/app-release.apk || true
+          ls -la app/build/outputs/apk/release/app-release.apk
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -62,18 +83,20 @@ jobs:
             ## AgendaPx v${{ steps.version.outputs.VERSION }}
 
             ### Instalación
-            1. Descarga el APK desde abajo
-            2. Habilita "Fuentes desconocidas" en tu dispositivo
-            3. Instala el APK
+            1. Descarga el APK desde la sección Assets.
+            2. Habilita la instalación desde fuentes desconocidas.
+            3. Instala la aplicación.
 
             ### Notas
-            - Requiere Android 7.0 (API 24) o superior
-            - Se recomienda desinstalar versiones anteriores si hay conflictos
+            - Requiere Android 7.0 (API 24) o superior.
+            - Se recomienda eliminar versiones antiguas si existe conflicto.
+
           files: |
             app/build/outputs/apk/release/app-release.apk
-            app/build/outputs/apk/debug/app-debug.apk
+
           draft: false
           prerelease: false
           generate_release_notes: true
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
