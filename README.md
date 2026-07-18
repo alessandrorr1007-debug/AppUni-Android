@@ -112,6 +112,12 @@ npm install
 npm run dev
 ```
 
+### iOS
+
+El repositorio de la versión nativa para iOS está en:
+
+[AppUni-Ios](https://github.com/alessandrorr1007-debug/AppUni-Ios)
+
 ---
 
 ## 📌 Versiones
