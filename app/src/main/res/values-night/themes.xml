@@ -19,7 +19,6 @@
         <item name="colorSurface">@color/color_surface</item>
         <item name="colorSurfaceVariant">@color/color_surface_variant</item>
         <item name="android:colorBackground">@color/color_background</item>
-        <item name="colorBackground">@color/color_background</item>
 
         <!-- Error -->
         <item name="colorError">@color/color_error</item>

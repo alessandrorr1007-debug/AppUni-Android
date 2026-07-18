@@ -14,6 +14,9 @@ import com.example.agendapx.data.NetworkUtils
 import com.example.agendapx.data.ThemeManager
 import com.example.agendapx.data.UserPreferences
 import com.example.agendapx.databinding.ActivityLoginBinding
+import com.example.agendapx.data.update.UpdateChecker
+import com.example.agendapx.data.update.UpdateDialogActivity
+import com.example.agendapx.data.update.UpdateInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -51,6 +54,7 @@ class LoginActivity : AppCompatActivity() {
         mostrarEstado("formulario")
 
         checkExistingSession()
+        checkForUpdates()
         setupListeners()
     }
 
@@ -96,6 +100,19 @@ class LoginActivity : AppCompatActivity() {
         } catch (e: Exception) {
             // Sin conexión → asumir sesión válida (se verificará al cargar notas)
             true
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    //  Actualización
+    // ─────────────────────────────────────────────────────────────────
+
+    private fun checkForUpdates() {
+        lifecycleScope.launch {
+            val info = UpdateChecker.checkForUpdate(this@LoginActivity)
+            if (info != null) {
+                startActivity(UpdateDialogActivity.createIntent(this@LoginActivity, info))
+            }
         }
     }
 
@@ -214,14 +231,18 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun iniciarAnimacionLogo() {
-        // Pulso suave del logo durante la carga
-        val scaleX = ObjectAnimator.ofFloat(binding.txtLogoEmoji, "scaleX", 1f, 1.15f, 1f)
-        val scaleY = ObjectAnimator.ofFloat(binding.txtLogoEmoji, "scaleY", 1f, 1.15f, 1f)
+        val scaleX = ObjectAnimator.ofFloat(binding.txtLogoEmoji, "scaleX", 1f, 1.15f, 1f).apply {
+            repeatCount = ObjectAnimator.INFINITE
+            repeatMode = ObjectAnimator.REVERSE
+        }
+        val scaleY = ObjectAnimator.ofFloat(binding.txtLogoEmoji, "scaleY", 1f, 1.15f, 1f).apply {
+            repeatCount = ObjectAnimator.INFINITE
+            repeatMode = ObjectAnimator.REVERSE
+        }
         val animSet = AnimatorSet()
         animSet.playTogether(scaleX, scaleY)
         animSet.duration = 1500
         animSet.interpolator = AccelerateDecelerateInterpolator()
-        animSet.repeatCount = ObjectAnimator.INFINITE
         animSet.start()
     }
 

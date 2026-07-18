@@ -17,9 +17,8 @@ import com.example.agendapx.data.ThemeManager
 import com.example.agendapx.data.UserPreferences
 import com.example.agendapx.databinding.FragmentInicioBinding
 import com.example.agendapx.ui.horario.HorarioFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import androidx.lifecycle.lifecycleScope
 
 class InicioFragment : Fragment() {
 
@@ -182,7 +181,7 @@ class InicioFragment : Fragment() {
     }
 
     private fun setupThemeSelector() {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             val current = UserPreferences.getThemeMode()
             requireActivity().runOnUiThread {
                 updateThemeButtonStyles(current)
@@ -195,7 +194,7 @@ class InicioFragment : Fragment() {
     }
 
     private fun applyTheme(mode: String) {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             UserPreferences.saveThemeMode(mode)
             requireActivity().runOnUiThread {
                 ThemeManager.setTheme(mode)
