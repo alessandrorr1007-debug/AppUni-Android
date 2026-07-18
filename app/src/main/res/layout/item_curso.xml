@@ -7,7 +7,7 @@
     android:layout_marginBottom="18dp"
     app:cardCornerRadius="28dp"
     app:cardElevation="8dp"
-    app:cardBackgroundColor="#FFFFFF">
+    app:cardBackgroundColor="@color/color_card_bg">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
         <View
             android:layout_width="8dp"
             android:layout_height="match_parent"
-            android:background="#8B5CF6"/>
+            android:background="@color/color_secondary"/>
 
         <!-- CONTENIDO -->
 
@@ -59,7 +59,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Aplicaciones Móviles"
-                    android:textColor="#0F172A"
+                    android:textColor="@color/color_text_primary"
                     android:textSize="20sp"
                     android:textStyle="bold"/>
 
@@ -68,7 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="📍 Aula: G606"
-                    android:textColor="#475569"
+                    android:textColor="@color/color_text_muted"
                     android:textSize="16sp"
                     android:layout_marginTop="10dp"/>
 
@@ -77,7 +77,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="🔢 NRC: 5585"
-                    android:textColor="#475569"
+                    android:textColor="@color/color_text_muted"
                     android:textSize="16sp"
                     android:layout_marginTop="4dp"/>
 
@@ -97,7 +97,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="08:50 - 12:25"
-                    android:textColor="#4F46E5"
+                    android:textColor="@color/color_primary"
                     android:textStyle="bold"
                     android:textSize="14sp"/>
 

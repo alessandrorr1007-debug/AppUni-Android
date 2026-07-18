@@ -1,30 +1,38 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Tema base oscuro (Material3 Dark - atributos correctos) -->
-    <style name="Base.Theme.AgendaPx" parent="Theme.Material3.Dark.NoActionBar">
-        <!-- Colores primarios M3 correctos -->
-        <item name="colorPrimary">@color/accent_purple</item>
-        <item name="colorPrimaryContainer">@color/accent_indigo</item>
-        <item name="colorSecondary">@color/accent_blue</item>
-        <item name="colorSecondaryContainer">@color/bg_surface</item>
+    <style name="Base.Theme.AgendaPx" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Primary -->
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryContainer">@color/color_primary_container</item>
+        <item name="colorOnPrimary">@color/color_on_primary</item>
+        <item name="colorOnPrimaryContainer">@color/color_on_primary_container</item>
 
-        <!-- Superficies -->
-        <item name="colorSurface">@color/bg_dark_card</item>
-        <item name="colorSurfaceVariant">@color/bg_surface</item>
+        <!-- Secondary -->
+        <item name="colorSecondary">@color/color_secondary</item>
+        <item name="colorSecondaryContainer">@color/color_secondary_container</item>
+        <item name="colorOnSecondary">@color/color_on_secondary</item>
 
-        <!-- Fondo del sistema (atributo Android correcto, NO colorBackground sin prefijo) -->
-        <item name="android:colorBackground">@color/bg_dark</item>
+        <!-- Tertiary -->
+        <item name="colorTertiary">@color/color_tertiary</item>
 
-        <!-- Texto sobre colores -->
-        <item name="colorOnPrimary">@color/white</item>
-        <item name="colorOnSecondary">@color/white</item>
-        <item name="colorOnSurface">@color/text_primary</item>
-        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
+        <!-- Surfaces -->
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="colorSurfaceVariant">@color/color_surface_variant</item>
+        <item name="android:colorBackground">@color/color_background</item>
+        <item name="colorBackground">@color/color_background</item>
 
-        <!-- Barra de estado y navegación -->
-        <item name="android:statusBarColor">@color/bg_dark</item>
-        <item name="android:navigationBarColor">@color/bg_dark</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <!-- Error -->
+        <item name="colorError">@color/color_error</item>
+
+        <!-- On colors -->
+        <item name="colorOnSurface">@color/color_text_primary</item>
+        <item name="colorOnSurfaceVariant">@color/color_text_secondary</item>
+
+        <!-- Status and nav bars -->
+        <item name="android:statusBarColor">@color/color_status_bar</item>
+        <item name="android:navigationBarColor">@color/color_nav_bar</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
     </style>
 
     <style name="Theme.AgendaPx" parent="Base.Theme.AgendaPx" />

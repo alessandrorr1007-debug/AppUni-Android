@@ -1,6 +1,5 @@
 package com.example.agendapx.ui.horario
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +21,9 @@ class HorarioFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var adapter: HorarioAdapter
+
+    private fun themeColor(resId: Int): Int =
+        ContextCompat.getColor(requireContext(), resId)
 
     private val dias = listOf(
         "Lunes",
@@ -73,13 +75,13 @@ class HorarioFragment : Fragment() {
             boton.layoutParams = params
 
             if (dia == diaSeleccionado) {
-                boton.setTextColor(Color.WHITE)
+                boton.setTextColor(themeColor(R.color.color_text_on_primary))
                 boton.background = ContextCompat.getDrawable(
                     requireContext(),
                     R.drawable.bg_day_selected
                 )
             } else {
-                boton.setTextColor(Color.parseColor("#0F172A"))
+                boton.setTextColor(themeColor(R.color.color_text_primary))
                 boton.background = ContextCompat.getDrawable(
                     requireContext(),
                     R.drawable.bg_day_unselected

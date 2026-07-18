@@ -1,6 +1,5 @@
 package com.example.agendapx.ui.inicio
 
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
@@ -9,17 +8,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.agendapx.R
 import com.example.agendapx.data.AppConstants
 import com.example.agendapx.data.HorarioData
+import com.example.agendapx.data.ThemeManager
+import com.example.agendapx.data.UserPreferences
 import com.example.agendapx.databinding.FragmentInicioBinding
 import com.example.agendapx.ui.horario.HorarioFragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class InicioFragment : Fragment() {
 
     private var _binding: FragmentInicioBinding? = null
     private val binding get() = _binding!!
+
+    private fun themeColor(resId: Int): Int =
+        ContextCompat.getColor(requireContext(), resId)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,12 +44,13 @@ class InicioFragment : Fragment() {
         activarClicks()
         activarCalculadoraAutomatica()
         calcularPromedioGeneral()
+        setupThemeSelector()
     }
 
     private fun aplicarEstiloPremium() {
-        binding.txtPromedio.setTextColor(Color.parseColor("#0F172A"))
-        binding.txtNotaNecesaria.setTextColor(Color.parseColor("#2563EB"))
-        binding.txtEstado.setTextColor(Color.parseColor("#64748B"))
+        binding.txtPromedio.setTextColor(themeColor(R.color.color_text_primary))
+        binding.txtNotaNecesaria.setTextColor(themeColor(R.color.color_tertiary))
+        binding.txtEstado.setTextColor(themeColor(R.color.color_text_secondary))
     }
 
     private fun cargarResumen() {
@@ -126,19 +135,19 @@ class InicioFragment : Fragment() {
         when {
             promedio >= 10.5 -> {
                 textView.text = "Estado: Aprobado ✅"
-                textView.setTextColor(Color.parseColor("#16A34A"))
+                textView.setTextColor(themeColor(R.color.color_success))
                 textView.setTypeface(null, Typeface.BOLD)
             }
 
             promedio > 0 -> {
                 textView.text = "Estado: En proceso ⚠️"
-                textView.setTextColor(Color.parseColor("#F59E0B"))
+                textView.setTextColor(themeColor(R.color.color_warning))
                 textView.setTypeface(null, Typeface.BOLD)
             }
 
             else -> {
                 textView.text = "Ingresa tus notas para calcular automáticamente."
-                textView.setTextColor(Color.parseColor("#64748B"))
+                textView.setTextColor(themeColor(R.color.color_text_secondary))
                 textView.setTypeface(null, Typeface.NORMAL)
             }
         }
@@ -170,6 +179,49 @@ class InicioFragment : Fragment() {
     private fun obtenerNota(valor: String): Double {
         val nota = valor.toDoubleOrNull() ?: 0.0
         return nota.coerceIn(0.0, 20.0)
+    }
+
+    private fun setupThemeSelector() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val current = UserPreferences.getThemeMode()
+            requireActivity().runOnUiThread {
+                updateThemeButtonStyles(current)
+            }
+        }
+
+        binding.btnThemeLight.setOnClickListener { applyTheme(ThemeManager.MODE_LIGHT) }
+        binding.btnThemeDark.setOnClickListener { applyTheme(ThemeManager.MODE_DARK) }
+        binding.btnThemeSystem.setOnClickListener { applyTheme(ThemeManager.MODE_SYSTEM) }
+    }
+
+    private fun applyTheme(mode: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            UserPreferences.saveThemeMode(mode)
+            requireActivity().runOnUiThread {
+                ThemeManager.setTheme(mode)
+                updateThemeButtonStyles(mode)
+            }
+        }
+    }
+
+    private fun updateThemeButtonStyles(activeMode: String) {
+        val buttons = mapOf(
+            ThemeManager.MODE_LIGHT to binding.btnThemeLight,
+            ThemeManager.MODE_DARK to binding.btnThemeDark,
+            ThemeManager.MODE_SYSTEM to binding.btnThemeSystem
+        )
+
+        buttons.forEach { (mode, button) ->
+            if (mode == activeMode) {
+                button.setBackgroundColor(themeColor(R.color.color_primary))
+                button.setTextColor(themeColor(R.color.color_on_primary))
+                button.strokeColor = null
+            } else {
+                button.setBackgroundColor(0)
+                button.setTextColor(themeColor(R.color.color_text_primary))
+                button.setStrokeColorResource(R.color.color_border)
+            }
+        }
     }
 
     override fun onDestroyView() {

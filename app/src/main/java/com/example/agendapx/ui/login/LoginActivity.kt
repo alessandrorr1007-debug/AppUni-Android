@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.agendapx.MainActivity
 import com.example.agendapx.data.AppConstants
 import com.example.agendapx.data.NetworkUtils
+import com.example.agendapx.data.ThemeManager
 import com.example.agendapx.data.UserPreferences
 import com.example.agendapx.databinding.ActivityLoginBinding
 import kotlinx.coroutines.Dispatchers
@@ -34,12 +35,17 @@ class LoginActivity : AppCompatActivity() {
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        UserPreferences.init(this)
+
+        val themeMode = kotlinx.coroutines.runBlocking {
+            withContext(Dispatchers.IO) { UserPreferences.getThemeMode() }
+        }
+        ThemeManager.setTheme(themeMode)
+
         super.onCreate(savedInstanceState)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        UserPreferences.init(this)
 
         // Iniciar en estado de formulario
         mostrarEstado("formulario")

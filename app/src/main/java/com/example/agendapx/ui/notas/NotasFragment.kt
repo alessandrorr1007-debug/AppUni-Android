@@ -1,8 +1,8 @@
 package com.example.agendapx.ui.notas
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.*
 import android.widget.LinearLayout
@@ -10,6 +10,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.agendapx.R
@@ -38,6 +39,9 @@ class NotasFragment : Fragment() {
     private var userId: String = ""
     private var termCodeActual: String? = null  // null = periodo actual (backend usa el default)
     private val periodos = mutableListOf<Pair<String, String>>() // (codigo, nombre)
+
+    private fun themeColor(resId: Int): Int =
+        ContextCompat.getColor(requireContext(), resId)
 
     // ─────────────────────────────────────────────────────────────────────────
     //  Ciclo de vida
@@ -334,7 +338,7 @@ class NotasFragment : Fragment() {
             val txt = crearTexto(
                 "No hay cursos disponibles.",
                 14f,
-                colorHex("#94A3B8")
+                themeColor(R.color.color_text_muted)
             )
             binding.contenedorCursos.addView(txt)
             return
@@ -353,7 +357,7 @@ class NotasFragment : Fragment() {
         val card = CardView(requireContext())
         card.radius = dpToPx(20f)
         card.cardElevation = 0f
-        card.setCardBackgroundColor(colorHex("#1A1A35"))
+        card.setCardBackgroundColor(themeColor(R.color.color_card_bg))
 
         val params = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -376,7 +380,9 @@ class NotasFragment : Fragment() {
         barraParams.setMargins(0, 0, dpToPx(14f).toInt(), 0)
         barra.layoutParams = barraParams
         barra.background = crearFondoColor(
-            if (aprobado) "#22C55E" else if (promedio > 0f) "#F59E0B" else "#475569",
+            if (aprobado) themeColor(R.color.color_grade_approved)
+            else if (promedio > 0f) themeColor(R.color.color_grade_risk)
+            else themeColor(R.color.color_grade_pending),
             dpToPx(2f)
         )
 
@@ -385,8 +391,8 @@ class NotasFragment : Fragment() {
         contenido.orientation = LinearLayout.VERTICAL
         contenido.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
 
-        val txtNombre = crearTexto(nombre, 16f, colorHex("#F1F5F9"), bold = true)
-        val txtMeta = crearTexto("NRC $nrc · $creditos créditos", 12f, colorHex("#64748B"))
+        val txtNombre = crearTexto(nombre, 16f, themeColor(R.color.color_text_primary), bold = true)
+        val txtMeta = crearTexto("NRC $nrc · $creditos créditos", 12f, themeColor(R.color.color_text_secondary))
         txtMeta.setPadding(0, 4, 0, 0)
 
         contenido.addView(txtNombre)
@@ -400,14 +406,18 @@ class NotasFragment : Fragment() {
         val txtPromedio = crearTexto(
             if (promedio > 0f) "%.2f".format(promedio) else "--",
             22f,
-            if (aprobado) colorHex("#86EFAC") else if (promedio > 0f) colorHex("#FCD34D") else colorHex("#94A3B8"),
+            if (aprobado) themeColor(R.color.color_grade_approved_light)
+            else if (promedio > 0f) themeColor(R.color.color_grade_risk_light)
+            else themeColor(R.color.color_text_muted),
             bold = true
         )
 
         val txtEstado = crearTexto(
             if (aprobado) "✓ OK" else if (promedio > 0f) "⚠ Riesgo" else "Pendiente",
             11f,
-            if (aprobado) colorHex("#22C55E") else if (promedio > 0f) colorHex("#F59E0B") else colorHex("#475569"),
+            if (aprobado) themeColor(R.color.color_grade_approved)
+            else if (promedio > 0f) themeColor(R.color.color_grade_risk)
+            else themeColor(R.color.color_grade_pending),
             bold = true
         )
         txtEstado.setPadding(0, 2, 0, 0)
@@ -446,7 +456,8 @@ class NotasFragment : Fragment() {
         binding.txtDescripcionCurso.text = "NRC $nrc · $creditos créditos"
         binding.txtPromedioCurso.text = "Promedio: ${if (promedio > 0f) "%.2f".format(promedio) else "--"}/20"
         binding.txtPromedioCurso.setTextColor(
-            if (aprobado) colorHex("#86EFAC") else colorHex("#FCA5A5")
+            if (aprobado) themeColor(R.color.color_grade_approved_light)
+            else themeColor(R.color.color_grade_fail_light)
         )
         binding.progresoCurso.progress = (promedio * 100).roundToInt().coerceIn(0, 2000)
         binding.txtFinalNecesarioCurso.text = calcularFinalNecesario(curso)
@@ -483,7 +494,7 @@ class NotasFragment : Fragment() {
         val card = CardView(requireContext())
         card.radius = dpToPx(18f)
         card.cardElevation = 0f
-        card.setCardBackgroundColor(colorHex("#1A1A35"))
+        card.setCardBackgroundColor(themeColor(R.color.color_card_bg))
 
         val paramsCard = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -503,19 +514,19 @@ class NotasFragment : Fragment() {
             dpToPx(16f).toInt(), dpToPx(14f).toInt(),
             dpToPx(16f).toInt(), dpToPx(14f).toInt()
         )
-        header.setBackgroundColor(colorHex("#20203F"))
+        header.setBackgroundColor(themeColor(R.color.color_card_header))
 
-        val txtEtiqueta = crearTexto("$etiqueta", 14f, colorHex("#F1F5F9"), bold = true)
+        val txtEtiqueta = crearTexto("$etiqueta", 14f, themeColor(R.color.color_text_primary), bold = true)
         txtEtiqueta.layoutParams =
             LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
 
-        val txtPeso = crearTexto(peso, 12f, colorHex("#64748B"))
+        val txtPeso = crearTexto(peso, 12f, themeColor(R.color.color_text_secondary))
 
         val colorNota = when {
-            !tieneNota -> colorHex("#475569")
-            nota >= 10.5f -> colorHex("#86EFAC")
-            nota >= 8f -> colorHex("#FCD34D")
-            else -> colorHex("#FCA5A5")
+            !tieneNota -> themeColor(R.color.color_grade_pending)
+            nota >= 10.5f -> themeColor(R.color.color_grade_approved_light)
+            nota >= 8f -> themeColor(R.color.color_grade_risk_light)
+            else -> themeColor(R.color.color_grade_fail_light)
         }
         val txtNota = crearTexto(
             if (tieneNota) "$puntaje/20" else "--",
@@ -530,7 +541,7 @@ class NotasFragment : Fragment() {
 
         // Calificación redondeada (si existe)
         if (calificacion.isNotBlank() && tieneNota) {
-            val txtCal = crearTexto("Calificación redondeada: $calificacion", 12f, colorHex("#64748B"))
+            val txtCal = crearTexto("Calificación redondeada: $calificacion", 12f, themeColor(R.color.color_text_secondary))
             txtCal.setPadding(
                 dpToPx(16f).toInt(), dpToPx(4f).toInt(),
                 dpToPx(16f).toInt(), dpToPx(4f).toInt()
@@ -543,7 +554,7 @@ class NotasFragment : Fragment() {
             val divider = View(requireContext())
             divider.layoutParams =
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1)
-            divider.setBackgroundColor(colorHex("#1E1E3F"))
+            divider.setBackgroundColor(themeColor(R.color.color_divider))
             layout.addView(divider)
 
             for (i in 0 until subcomponentes.length()) {
@@ -563,21 +574,21 @@ class NotasFragment : Fragment() {
                 )
 
                 // Bullet point
-                val bullet = crearTexto("•", 14f, colorHex("#4F46E5"))
+                val bullet = crearTexto("•", 14f, themeColor(R.color.color_primary))
                 bullet.setPadding(0, 0, dpToPx(8f).toInt(), 0)
 
                 val txtSubNombre = crearTexto(
                     nombreSub + if (pesoSub.isNotBlank()) " ($pesoSub%)" else "",
-                    13f, colorHex("#94A3B8")
+                    13f, themeColor(R.color.color_text_muted)
                 )
                 txtSubNombre.layoutParams =
                     LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
 
                 val colorSub = when {
-                    !tieneNotaSub -> colorHex("#475569")
-                    notaSub >= 10.5f -> colorHex("#86EFAC")
-                    notaSub >= 8f -> colorHex("#FCD34D")
-                    else -> colorHex("#FCA5A5")
+                    !tieneNotaSub -> themeColor(R.color.color_grade_pending)
+                    notaSub >= 10.5f -> themeColor(R.color.color_grade_approved_light)
+                    notaSub >= 8f -> themeColor(R.color.color_grade_risk_light)
+                    else -> themeColor(R.color.color_grade_fail_light)
                 }
                 val txtSubNota = crearTexto(
                     if (tieneNotaSub) "$puntajeSub/20" else "--",
@@ -595,12 +606,12 @@ class NotasFragment : Fragment() {
                     val sep = View(requireContext())
                     sep.layoutParams =
                         LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1)
-                    sep.setBackgroundColor(colorHex("#1E1E3F"))
+                    sep.setBackgroundColor(themeColor(R.color.color_divider))
                     layout.addView(sep)
                 }
             }
         } else if (!tieneNota) {
-            val txtSin = crearTexto("Sin nota registrada", 12f, colorHex("#475569"))
+            val txtSin = crearTexto("Sin nota registrada", 12f, themeColor(R.color.color_grade_pending))
             txtSin.setPadding(
                 dpToPx(16f).toInt(), dpToPx(8f).toInt(),
                 dpToPx(16f).toInt(), dpToPx(10f).toInt()
@@ -673,15 +684,13 @@ class NotasFragment : Fragment() {
         }
     }
 
-    private fun crearFondoColor(hexColor: String, radio: Float): android.graphics.drawable.GradientDrawable {
-        return android.graphics.drawable.GradientDrawable().apply {
-            shape = android.graphics.drawable.GradientDrawable.RECTANGLE
+    private fun crearFondoColor(color: Int, radio: Float): GradientDrawable {
+        return GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
             cornerRadius = radio
-            setColor(Color.parseColor(hexColor))
+            setColor(color)
         }
     }
-
-    private fun colorHex(hex: String): Int = Color.parseColor(hex)
 
     private fun dpToPx(dp: Float): Float =
         dp * resources.displayMetrics.density

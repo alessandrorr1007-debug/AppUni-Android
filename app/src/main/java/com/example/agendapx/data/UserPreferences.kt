@@ -7,7 +7,9 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "session_prefs")
 
@@ -17,6 +19,7 @@ object UserPreferences {
     private val KEY_USER_NAME = stringPreferencesKey("user_name")
     private val KEY_IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
     private val KEY_REMEMBER_SESSION = booleanPreferencesKey("remember_session")
+    private val KEY_THEME_MODE = stringPreferencesKey("theme_mode")
 
     private lateinit var context: Context
 
@@ -58,5 +61,23 @@ object UserPreferences {
         return context.dataStore.data.map { prefs ->
             prefs[KEY_IS_LOGGED_IN] ?: false
         }.first()
+    }
+
+    suspend fun saveThemeMode(mode: String) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_THEME_MODE] = mode
+        }
+    }
+
+    suspend fun getThemeMode(): String {
+        return context.dataStore.data.map { prefs ->
+            prefs[KEY_THEME_MODE] ?: ThemeManager.MODE_SYSTEM
+        }.first()
+    }
+
+    fun getThemeModeFlow(): Flow<String> {
+        return context.dataStore.data.map { prefs ->
+            prefs[KEY_THEME_MODE] ?: ThemeManager.MODE_SYSTEM
+        }
     }
 }

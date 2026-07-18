@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_app_gradient">
+    android:background="@color/color_background">
 
     <!-- =========================================
          SECCIÓN: Formulario de Login
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="UPAO PX"
-                android:textColor="@color/text_primary"
+                android:textColor="@color/color_text_primary"
                 android:textSize="34sp"
                 android:textStyle="bold" />
 
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="Consulta tu información académica"
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/color_text_secondary"
                 android:textSize="15sp" />
 
             <Space
@@ -61,13 +61,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="ID del Alumno"
-                app:boxBackgroundColor="@color/bg_dark_card"
+                app:boxBackgroundColor="@color/color_surface"
                 app:boxCornerRadiusBottomEnd="16dp"
                 app:boxCornerRadiusBottomStart="16dp"
                 app:boxCornerRadiusTopEnd="16dp"
                 app:boxCornerRadiusTopStart="16dp"
-                app:boxStrokeColor="@color/accent_indigo"
-                app:hintTextColor="@color/accent_purple_light"
+                app:boxStrokeColor="@color/color_input_focus"
+                app:hintTextColor="@color/color_primary"
                 app:hintEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -75,8 +75,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:inputType="text"
-                    android:textColor="@color/text_primary"
-                    android:textColorHint="@color/text_muted"
+                    android:textColor="@color/color_text_primary"
+                    android:textColorHint="@color/color_text_muted"
                     android:textSize="16sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -92,14 +92,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Contraseña"
-                app:boxBackgroundColor="@color/bg_dark_card"
+                app:boxBackgroundColor="@color/color_surface"
                 app:boxCornerRadiusBottomEnd="16dp"
                 app:boxCornerRadiusBottomStart="16dp"
                 app:boxCornerRadiusTopEnd="16dp"
                 app:boxCornerRadiusTopStart="16dp"
-                app:boxStrokeColor="@color/accent_indigo"
+                app:boxStrokeColor="@color/color_input_focus"
                 app:endIconMode="password_toggle"
-                app:hintTextColor="@color/accent_purple_light"
+                app:hintTextColor="@color/color_primary"
                 app:hintEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -107,8 +107,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:inputType="textPassword"
-                    android:textColor="@color/text_primary"
-                    android:textColorHint="@color/text_muted"
+                    android:textColor="@color/color_text_primary"
+                    android:textColorHint="@color/color_text_muted"
                     android:textSize="16sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -131,9 +131,9 @@
                     android:layout_height="wrap_content"
                     android:checked="true"
                     android:text="Recordar sesión"
-                    android:textColor="@color/text_secondary"
-                    app:thumbTint="@color/accent_purple"
-                    app:trackTint="@color/bg_surface" />
+                    android:textColor="@color/color_text_secondary"
+                    app:thumbTint="@color/color_primary"
+                    app:trackTint="@color/color_surface_variant" />
 
             </LinearLayout>
 
@@ -146,11 +146,11 @@
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:backgroundTint="@color/accent_purple"
+                android:backgroundTint="@color/color_primary"
                 android:stateListAnimator="@null"
                 android:text="Iniciar Sesión"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@color/color_on_primary"
                 android:textSize="16sp"
                 app:cornerRadius="16dp" />
 
@@ -162,7 +162,7 @@
                 android:layout_marginTop="16dp"
                 android:gravity="center"
                 android:text=""
-                android:textColor="@color/danger_red_light"
+                android:textColor="@color/color_error"
                 android:textSize="14sp"
                 android:visibility="gone" />
 
@@ -176,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Tus credenciales se usan únicamente para acceder al portal UPAO y nunca se almacenan."
-                android:textColor="@color/text_muted"
+                android:textColor="@color/color_text_muted"
                 android:textSize="12sp" />
 
         </LinearLayout>
@@ -184,7 +184,6 @@
 
     <!-- =========================================
          SECCIÓN: Pantalla de Carga
-         (se muestra durante el login, puede tardar 30-60 segundos)
          ========================================= -->
     <LinearLayout
         android:id="@+id/seccionCargando"
@@ -208,7 +207,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="UPAO PX"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/color_text_primary"
             android:textSize="28sp"
             android:textStyle="bold" />
 
@@ -219,9 +218,9 @@
             android:layout_height="4dp"
             android:layout_marginTop="32dp"
             android:indeterminate="true"
-            android:progressTint="@color/accent_purple" />
+            android:progressTint="@color/color_primary" />
 
-        <!-- Mensaje de estado (rota entre varios) -->
+        <!-- Mensaje de estado -->
         <TextView
             android:id="@+id/txtMensajeCarga"
             android:layout_width="match_parent"
@@ -229,7 +228,7 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="Verificando credenciales..."
-            android:textColor="@color/text_secondary"
+            android:textColor="@color/color_text_secondary"
             android:textSize="16sp" />
 
         <TextView
@@ -238,7 +237,7 @@
             android:layout_marginTop="12dp"
             android:gravity="center"
             android:text="Esto puede tardar hasta 60 segundos.\nPor favor no cierres la aplicación."
-            android:textColor="@color/text_muted"
+            android:textColor="@color/color_text_muted"
             android:textSize="13sp" />
 
     </LinearLayout>

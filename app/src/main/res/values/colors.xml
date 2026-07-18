@@ -1,35 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Paleta base (oscura como la web) -->
-    <color name="bg_dark">#0A0A19</color>
-    <color name="bg_dark_card">#12122A</color>
-    <color name="bg_surface">#1A1A35</color>
+    <!-- Core surfaces (Light theme defaults) -->
+    <color name="color_background">#F8FAFC</color>
+    <color name="color_surface">#FFFFFF</color>
+    <color name="color_surface_variant">#F1F5F9</color>
+    <color name="color_surface_elevated">#FFFFFF</color>
 
-    <!-- Acentos violeta/índigo (idénticos a la web) -->
-    <color name="accent_purple">#7C3AED</color>
-    <color name="accent_purple_light">#C4B5FD</color>
-    <color name="accent_indigo">#4F46E5</color>
-    <color name="accent_blue">#38BDF8</color>
-    <color name="accent_blue_light">#7DD3FC</color>
+    <!-- Primary -->
+    <color name="color_primary">#4F46E5</color>
+    <color name="color_primary_container">#EEF2FF</color>
+    <color name="color_on_primary">#FFFFFF</color>
+    <color name="color_on_primary_container">#3730A3</color>
 
-    <!-- Estado: aprobado, riesgo, pendiente -->
-    <color name="ok_green">#22C55E</color>
-    <color name="ok_green_light">#86EFAC</color>
-    <color name="warn_yellow">#F59E0B</color>
-    <color name="warn_yellow_light">#FCD34D</color>
-    <color name="danger_red">#EF4444</color>
-    <color name="danger_red_light">#FCA5A5</color>
+    <!-- Secondary -->
+    <color name="color_secondary">#7C3AED</color>
+    <color name="color_secondary_container">#F5F3FF</color>
+    <color name="color_on_secondary">#FFFFFF</color>
 
-    <!-- Texto -->
-    <color name="text_primary">#F1F5F9</color>
-    <color name="text_secondary">#94A3B8</color>
-    <color name="text_muted">#475569</color>
+    <!-- Tertiary -->
+    <color name="color_tertiary">#0891B2</color>
 
-    <!-- Bordes y superficies con transparencia -->
-    <color name="border">#1E1E3F</color>
-    <color name="surface_glass">#14143010</color>
+    <!-- Status colors -->
+    <color name="color_success">#16A34A</color>
+    <color name="color_success_container">#F0FDF4</color>
+    <color name="color_warning">#D97706</color>
+    <color name="color_warning_container">#FFFBEB</color>
+    <color name="color_error">#DC2626</color>
+    <color name="color_error_container">#FEF2F2</color>
+    <color name="color_info">#0891B2</color>
 
-    <!-- Colores heredados requeridos por el sistema -->
+    <!-- Grade status colors -->
+    <color name="color_grade_approved">#22C55E</color>
+    <color name="color_grade_approved_light">#86EFAC</color>
+    <color name="color_grade_risk">#F59E0B</color>
+    <color name="color_grade_risk_light">#FCD34D</color>
+    <color name="color_grade_fail">#EF4444</color>
+    <color name="color_grade_fail_light">#FCA5A5</color>
+    <color name="color_grade_pending">#475569</color>
+
+    <!-- Text -->
+    <color name="color_text_primary">#0F172A</color>
+    <color name="color_text_secondary">#64748B</color>
+    <color name="color_text_muted">#94A3B8</color>
+    <color name="color_text_on_primary">#FFFFFF</color>
+
+    <!-- Border and dividers -->
+    <color name="color_border">#E2E8F0</color>
+    <color name="color_divider">#F1F5F9</color>
+    <color name="color_input_background">#F8FAFC</color>
+    <color name="color_input_border">#CBD5E1</color>
+    <color name="color_input_focus">#4F46E5</color>
+
+    <!-- Navigation -->
+    <color name="color_bottom_nav_bg">#FFFFFF</color>
+    <color name="color_bottom_nav_active">#4F46E5</color>
+    <color name="color_bottom_nav_inactive">#94A3B8</color>
+
+    <!-- Status bar / Nav bar -->
+    <color name="color_status_bar">#F8FAFC</color>
+    <color name="color_nav_bar">#FFFFFF</color>
+
+    <!-- Card specifics -->
+    <color name="color_card_bg">#FFFFFF</color>
+    <color name="color_card_header">#F8FAFC</color>
+
+    <!-- Legacy compat -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

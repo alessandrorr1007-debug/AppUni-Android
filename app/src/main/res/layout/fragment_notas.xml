@@ -4,7 +4,7 @@
     android:id="@+id/scrollNotas"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_app_gradient"
+    android:background="@color/color_background"
     android:fillViewport="true">
 
     <LinearLayout
@@ -32,7 +32,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Mis Notas"
-                    android:textColor="@color/text_primary"
+                    android:textColor="@color/color_text_primary"
                     android:textSize="30sp"
                     android:textStyle="bold" />
 
@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Calificaciones desde UPAO"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="@color/color_text_secondary"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -54,9 +54,19 @@
                 android:contentDescription="Actualizar notas"
                 android:padding="12dp"
                 android:src="@android:drawable/ic_popup_sync"
-                android:tint="@color/white" />
+                android:tint="@color/color_text_on_primary" />
 
         </LinearLayout>
+
+        <!-- Spinner de períodos -->
+        <Spinner
+            android:id="@+id/spinnerPeriodo"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_input_premium"
+            android:paddingHorizontal="12dp"
+            android:visibility="gone" />
 
         <!-- ProgressBar de carga -->
         <ProgressBar
@@ -66,7 +76,7 @@
             android:layout_height="4dp"
             android:layout_marginTop="12dp"
             android:indeterminate="true"
-            android:progressTint="@color/accent_purple"
+            android:progressTint="@color/color_primary"
             android:visibility="gone" />
 
         <!-- Tarjeta KPI general -->
@@ -75,7 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:cardBackgroundColor="@color/bg_dark_card"
+            app:cardBackgroundColor="@color/color_card_bg"
             app:cardCornerRadius="24dp"
             app:cardElevation="0dp">
 
@@ -113,7 +123,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
                             android:text="--"
-                            android:textColor="@color/accent_purple_light"
+                            android:textColor="@color/color_primary"
                             android:textSize="28sp"
                             android:textStyle="bold" />
 
@@ -122,7 +132,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="Promedio"
-                            android:textColor="@color/text_secondary"
+                            android:textColor="@color/color_text_secondary"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -148,7 +158,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
                             android:text="--"
-                            android:textColor="@color/accent_blue_light"
+                            android:textColor="@color/color_tertiary"
                             android:textSize="28sp"
                             android:textStyle="bold" />
 
@@ -157,7 +167,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="Cursos"
-                            android:textColor="@color/text_secondary"
+                            android:textColor="@color/color_text_secondary"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -170,7 +180,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
                     android:text="Cargando..."
-                    android:textColor="@color/text_secondary"
+                    android:textColor="@color/color_text_secondary"
                     android:textSize="13sp" />
 
             </LinearLayout>
@@ -210,10 +220,10 @@
                 android:id="@+id/btnVolverCursos"
                 android:layout_width="wrap_content"
                 android:layout_height="46dp"
-                android:backgroundTint="@color/accent_indigo"
+                android:backgroundTint="@color/color_primary"
                 android:text="← Volver"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@color/color_on_primary"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -224,7 +234,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:text="Curso"
-                android:textColor="@color/text_primary"
+                android:textColor="@color/color_text_primary"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -235,7 +245,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text=""
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/color_text_secondary"
                 android:textSize="13sp" />
 
             <!-- KPI promedio del curso -->
@@ -252,7 +262,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Promedio: --"
-                    android:textColor="@color/text_primary"
+                    android:textColor="@color/color_text_primary"
                     android:textSize="26sp"
                     android:textStyle="bold" />
 
@@ -264,8 +274,8 @@
                     android:layout_marginTop="10dp"
                     android:max="2000"
                     android:progress="0"
-                    android:progressTint="@color/accent_purple"
-                    android:progressBackgroundTint="@color/border" />
+                    android:progressTint="@color/color_primary"
+                    android:progressBackgroundTint="@color/color_border" />
 
                 <TextView
                     android:id="@+id/txtFinalNecesarioCurso"
@@ -273,7 +283,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text=""
-                    android:textColor="@color/accent_blue_light"
+                    android:textColor="@color/color_tertiary"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 

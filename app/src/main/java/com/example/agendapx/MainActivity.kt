@@ -8,12 +8,14 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.work.*
 import com.example.agendapx.data.AppConstants
 import com.example.agendapx.data.NetworkUtils
+import com.example.agendapx.data.ThemeManager
 import com.example.agendapx.data.UserPreferences
 import com.example.agendapx.databinding.ActivityMainBinding
 import com.example.agendapx.ui.horario.HorarioFragment
@@ -33,12 +35,17 @@ class MainActivity : AppCompatActivity() {
     private var currentUserId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        UserPreferences.init(this)
+
+        val themeMode = kotlinx.coroutines.runBlocking {
+            withContext(Dispatchers.IO) { UserPreferences.getThemeMode() }
+        }
+        ThemeManager.setTheme(themeMode)
+
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        UserPreferences.init(this)
 
         lifecycleScope.launch {
             currentUserId = withContext(Dispatchers.IO) {
