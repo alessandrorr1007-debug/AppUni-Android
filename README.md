@@ -1,118 +1,138 @@
-# Agenda Px
+# AppUni-Android
 
-Aplicación Android para estudiantes de la Universidad Privada Antenor Orrego (UPAO) que permite consultar notas académicas, horarios de clases y calculadora de promedios en tiempo real.
+Aplicación Android para estudiantes de la **Universidad Privada Antenor Orrego (UPAO)** que permite consultar notas académicas, horarios de clases, asistencia y calcular promedios en tiempo real. La app se conecta con el portal UPAO a través de un backend seguro con autenticación JWT.
 
-## Funcionalidades
+---
 
-- **Login seguro** contra el portal UPAO PX (sin almacenar credenciales)
-- **Consulta de notas** por período académico con detalle de componentes y subcomponentes
-- **Calculadora de promedio** con cálculo automático de nota final necesaria
-- **Horario semanal** interactivo con selección de días
-- **Sincronización en segundo plano** cada 30 minutos con WorkManager
-- **Notificaciones** cuando se actualizan las notas
-- **Selector de tema** claro / oscuro / seguir configuración del sistema
-- **Cache local** para funcionamiento offline
+## 📱 Descargar aplicación
 
-## Tecnologías
+[⬇️ Descargar AppUni-Android APK](https://github.com/alessandrorr1007-debug/AppUni-Android/releases/latest)
+
+> Versión actual: **1.1.0** · Requiere Android 7.0 o superior
+
+---
+
+## 🚀 Instalación
+
+1. Descargar el APK desde el enlace anterior.
+2. Si Android muestra una advertencia, habilitar **"Fuentes desconocidas"** en Configuración > Seguridad.
+3. Abrir el archivo APK descargado.
+4. Presionar **Instalar**.
+5. Abrir la aplicación y comenzar a usarla.
+
+---
+
+## ✨ Características principales
+
+- **Inicio de sesión seguro** — Autenticación JWT contra el portal UPAO PX, sin almacenar credenciales
+- **Consulta de notas** — Por período académico con detalle de componentes (EP1, Parcial, EP2, Final) y subcomponentes
+- **Calculadora de promedio** — Cálculo automático de la nota final necesaria para aprobar cada curso
+- **Horario semanal** — Vista interactiva con selección de días (Lunes a Sábado)
+- **Asistencia** — Consulta porcentaje de asistencia por materia con estados (Aprobado / En riesgo / Reprobado)
+- **Sincronización en segundo plano** — Actualización automática cada 30 minutos con WorkManager
+- **Notificaciones** — Alertas cuando se detectan cambios en las notas
+- **Tema claro / oscuro / sistema** — Selector de tema en la pantalla de Inicio
+- **Actualizaciones in-app** — Detección automática de nuevas versiones desde GitHub Releases
+- **Modo offline** — Caché local que muestra la última información guardada sin conexión
+
+---
+
+## 🛠️ Tecnologías utilizadas
 
 | Categoría | Tecnología |
 |-----------|------------|
 | Lenguaje | Kotlin |
 | UI | XML Layouts + ViewBinding |
-| Temas | Material Design 3 (Material3 Light/Dark) |
+| Diseño | Material Design 3 (Material3 Light/Dark) |
 | Arquitectura | Single Activity + Fragments |
-| Red | HttpURLConnection (vanilla) |
+| Red | HttpURLConnection |
 | Persistencia | DataStore Preferences + SharedPreferences |
 | Background | WorkManager (sincronización periódica) |
 | Notificaciones | NotificationCompat + NotificationChannel |
 | Coroutines | Kotlin Coroutines + Lifecycle Scope |
-| Backend | Node.js + Playwright scraper ([Upao_PX Backend](https://github.com/alessandrorr1007-debug/Upao_.git)) |
+| Backend | Node.js + Express + Playwright |
+| Seguridad | JWT (JSON Web Tokens) + Rate Limiting |
+| Despliegue | Render.com (backend) + GitHub Releases (APK) |
 
-## Requisitos
+---
 
-- Android Studio Ladybug (2024.2+) o superior
-- JDK 11+
+## 📸 Capturas de pantalla
+
+> Agregar imágenes de las principales pantallas de la aplicación.
+
+![Pantalla de login](screenshots/login.png)
+![Pantalla de notas](screenshots/notas.png)
+![Pantalla de horario](screenshots/horario.png)
+
+---
+
+## 👨‍💻 Instalación para desarrolladores
+
+### Requisitos
+
+- Android Studio Ladybug (2024.2) o superior
+- JDK 21 (incluido en Android Studio JBR)
 - Android SDK 36
 - Dispositivo con Android 7.0 (API 24) o superior
 
-## Ejecución
+### Pasos
 
 1. Clonar el repositorio:
+
    ```bash
    git clone https://github.com/alessandrorr1007-debug/AppUni-Android.git
    ```
 
-2. Abrir el proyecto en Android Studio
+2. Abrir el proyecto en Android Studio.
 
-3. Esperar a que Gradle sincronice las dependencias
+3. Esperar a que Gradle sincronice las dependencias.
 
-4. Conectar un dispositivo Android o iniciar un emulador
+4. Conectar un dispositivo Android o iniciar un emulador.
 
 5. Presionar **Run** (▶) o ejecutar:
+
    ```bash
    ./gradlew installDebug
    ```
 
-6. Iniciar sesión con tus credenciales UPAO
+### Backend
 
-## Estructura del Proyecto
+La app requiere el backend activo para funcionar. El repositorio del backend está en:
 
-```
-app/src/main/
-├── java/com/example/agendapx/
-│   ├── MainActivity.kt                  # Activity principal con navegación
-│   ├── adapter/
-│   │   └── HorarioAdapter.kt            # Adapter del RecyclerView de horario
-│   ├── data/
-│   │   ├── AppConstants.kt              # URLs, constantes, utilidades de fecha
-│   │   ├── Curso.kt                     # Data class de cursos
-│   │   ├── HorarioData.kt               # Datos del horario semanal
-│   │   ├── NetworkUtils.kt              # Utilidades HTTP (GET/POST)
-│   │   ├── ThemeManager.kt              # Gestión de temas claro/oscuro
-│   │   └── UserPreferences.kt           # Persistencia de sesión y preferencias
-│   ├── theme/
-│   │   └── ThemeHelper.kt               # Helper para resolver colores del tema
-│   └── ui/
-│       ├── horario/
-│       │   └── HorarioFragment.kt       # Pantalla de horario semanal
-│       ├── inicio/
-│       │   └── InicioFragment.kt        # Dashboard con resumen y calculadora
-│       ├── login/
-│       │   └── LoginActivity.kt         # Pantalla de inicio de sesión
-│       └── notas/
-│           ├── NotasFragment.kt         # Pantalla de notas con detalle
-│           ├── NotasNotificacionHelper.kt # Sistema de notificaciones
-│           └── NotasSyncWorker.kt       # Worker de sincronización en background
-├── res/
-│   ├── drawable/                        # Recursos gráficos (gradientes, formas)
-│   ├── layout/                          # Layouts XML (6 archivos)
-│   ├── values/                          # Colores, estilos, temas (light)
-│   ├── values-night/                    # Colores y temas (dark)
-│   └── xml/                             # Reglas de backup
+[Upao_PX Backend](https://github.com/alessandrorr1007-debug/Upao_.git)
+
+Para ejecutar el backend localmente:
+
+```bash
+git clone https://github.com/alessandrorr1007-debug/Upao_.git
+cd "UPAO PX/backend"
+npm install
+npm run dev
 ```
 
-## Temas
+---
 
-La aplicación soporta 3 modos de tema:
+## 📌 Versiones
 
-- **☀ Claro** (predeterminado) — Fondo blanco, tarjetas limpias, sombras suaves
-- **🌙 Oscuro** — Fondo oscuro, colores vibrantes sobre superficies oscuras
-- **⚙ Sistema** — Sigue la configuración del dispositivo
+| Versión | Fecha | Cambios |
+|---------|-------|---------|
+| 1.1.0 | Julio 2026 | Sistema de actualizaciones in-app, fix de errores de compilación, migración a coroutines |
+| 1.0.0 | Junio 2026 | Versión inicial: login, notas, horario, calculadora, temas claro/oscuro |
 
-El selector de tema se encuentra en la pantalla de **Inicio** > **Configuración**.
+---
 
-## Backend
-
-La aplicación se comunica con un backend Node.js que realiza scraping del portal UPAO PX usando Playwright. El backend está desplegado en Render.com.
-
-- **Backend URL**: `https://upao-px-backend.onrender.com`
-- **Repositorio Backend**: [Upao_PX](https://github.com/alessandrorr1007-debug/Upao_.git)
-
-## Autor
-
-**Alessandro Rodriguez**
-- GitHub: [@alessandrorr1007-debug](https://github.com/alessandrorr1007-debug)
-
-## Licencia
+## 📄 Licencia
 
 Este proyecto es de uso académico.
+
+```
+[COMPLETAR INFORMACIÓN DE LICENCIA]
+```
+
+---
+
+## 👤 Autor
+
+**Alessandro Rodriguez**
+
+- GitHub: [@alessandrorr1007-debug](https://github.com/alessandrorr1007-debug)
