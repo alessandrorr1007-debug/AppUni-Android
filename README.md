@@ -4,9 +4,11 @@ Aplicación Android para estudiantes de la **Universidad Privada Antenor Orrego 
 
 ---
 
-## 📱 Descargar aplicación
+## 📱 Descargar AppUni-Android
 
-[⬇️ Descargar AppUni-Android APK](https://github.com/alessandrorr1007-debug/AppUni-Android/releases/latest)
+[⬇️ Descargar APK de AppUni-Android](https://github.com/alessandrorr1007-debug/AppUni-Android/releases/latest)
+
+> **Nota:** El enlace de descarga redirige a la última Release publicada en GitHub. Si ves "Aquí no hay ninguna edición", significa que aún no se ha creado una Release. El APK estará disponible en GitHub Releases → AppUni-Android APK una vez que se publique la primera versión.
 
 > Versión actual: **1.1.0** · Requiere Android 7.0 o superior
 
